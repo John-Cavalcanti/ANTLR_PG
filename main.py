@@ -13,13 +13,22 @@ class ArithmeticVisitor:
     
         elif isinstance(ctx, ArithmeticParser.FactorContext):
             return self.visitFactor(ctx)
+        
+        elif isinstance(ctx, ArithmeticParser.ProgramContext):
+            pass
+        
+        elif isinstance(ctx, ArithmeticParser.StatementContext):
+            pass
+        
+        elif isinstance(ctx, ArithmeticParser.AssignmentContext):
+            pass
 
     def visitExpr(self, ctx):
     
         result = self.visit(ctx.term(0))
     
         for i in range(1, len(ctx.term())):
-    
+            
             if ctx.getChild(i * 2 - 1).getText() == '+':
                 result += self.visit(ctx.term(i))
             else:
@@ -32,6 +41,7 @@ class ArithmeticVisitor:
         result = self.visit(ctx.factor(0))
     
         for i in range(1, len(ctx.factor())):
+            
     
             if ctx.getChild(i * 2 - 1).getText() == '*':
                 result *= self.visit(ctx.factor(i))
@@ -46,6 +56,27 @@ class ArithmeticVisitor:
             return int(ctx.INT().getText())
         else:
             return self.visit(ctx.expr())
+    
+    # criar visits
+    
+    ## visitProgram
+    def visitProgram(self, ctx):
+        result = self.visit(ctx.statement(0))
+        
+        for i in range(1, len(ctx.statement())):
+            if ctx.getChild(i * 2 - 1).statement():
+                result += self.visit(ctx.statement(i))
+            else:
+                result -= self.visit(ctx.statement(i))
+    
+    ## visitStatement
+    def visitStatement(self, ctx):
+        pass
+    
+    ## visitAssignment
+    def visitAssignment(self, ctx):
+        pass
+    
 
 def main():
     expression = input("Digite uma expressão aritmética: ")
