@@ -4,6 +4,8 @@ from ArithmeticParser import ArithmeticParser
 
 class ArithmeticVisitor:
     
+    variablesDict = {}
+    
     def visit(self, ctx):
         if isinstance(ctx, ArithmeticParser.ExprContext):
             return self.visitExpr(ctx)
@@ -71,11 +73,16 @@ class ArithmeticVisitor:
     
     ## visitStatement
     def visitStatement(self, ctx):
-        pass
+        if(ctx.assignment()):
+            return self.visit(ctx.assignment())
+        elif(ctx.expr()):
+            return self.visit(ctx.expr())
+        
     
     ## visitAssignment
     def visitAssignment(self, ctx):
-        pass
+        variable_name = ctx.VAR().getText()
+        value = ctx.visit(ctx.expr())
     
 
 def main():
