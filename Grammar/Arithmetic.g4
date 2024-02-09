@@ -3,7 +3,7 @@ grammar Arithmetic;
 // Regras do Parser e Novas Regras do Parser
 expr: term ( (PLUS | MINUS) term )* ;
 term: factor ( (MUL | DIV) factor )* ;
-factor: INT | LPAREN expr RPAREN ;
+factor: INT | VAR | LPAREN expr RPAREN ;
 
 program: statement+ ;
 statement: assignment | expr ;

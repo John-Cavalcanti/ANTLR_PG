@@ -17,13 +17,13 @@ class ArithmeticVisitor:
             return self.visitFactor(ctx)
         
         elif isinstance(ctx, ArithmeticParser.ProgramContext):
-            pass
+            return self.visitProgram(ctx)
         
         elif isinstance(ctx, ArithmeticParser.StatementContext):
-            pass
+            return self.visitStatement(ctx)
         
         elif isinstance(ctx, ArithmeticParser.AssignmentContext):
-            pass
+            return self.visitAssignment(ctx)
 
     def visitExpr(self, ctx):
     
@@ -56,6 +56,10 @@ class ArithmeticVisitor:
     
         if ctx.INT():
             return int(ctx.INT().getText())
+        elif ctx.VAR():
+            key = ctx.VAR().getText()
+            number = self.variablesDict[key]
+            return int(number)
         else:
             return self.visit(ctx.expr())
     
@@ -70,30 +74,42 @@ class ArithmeticVisitor:
                 result += self.visit(ctx.statement(i))
             else:
                 result -= self.visit(ctx.statement(i))
+        
+        return result
     
     ## visitStatement
     def visitStatement(self, ctx):
         if(ctx.assignment()):
+            
             return self.visit(ctx.assignment())
+        
         elif(ctx.expr()):
+            
             return self.visit(ctx.expr())
         
     
     ## visitAssignment
     def visitAssignment(self, ctx):
         variable_name = ctx.VAR().getText()
-        value = ctx.visit(ctx.expr())
+        value = self.visit(ctx.expr())
+        self.variablesDict[variable_name] = value;
+        return value;
     
 
 def main():
-    expression = input("Digite uma expressão aritmética: ")
-    lexer = ArithmeticLexer(InputStream(expression))
-    stream = CommonTokenStream(lexer)
-    parser = ArithmeticParser(stream)
-    tree = parser.expr()
-    visitor = ArithmeticVisitor()
-    result = visitor.visit(tree)
-    print("Resultado:", result)
+    print("Quando quiser sair digite 'sair'\nDigite uma expressão aritmética: ")
+    
+    while True:
+        expression = input(">>> ")
+        if expression == 'sair':
+            break
+        lexer = ArithmeticLexer(InputStream(expression))
+        stream = CommonTokenStream(lexer)
+        parser = ArithmeticParser(stream)
+        tree = parser.program()
+        visitor = ArithmeticVisitor()
+        result = visitor.visit(tree)
+        print("Resultado:", result)
 
 if __name__ == '__main__':
     main()
