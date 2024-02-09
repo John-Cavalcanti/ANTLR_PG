@@ -1,0 +1,20 @@
+Exemplos de entradas, não utilizar comando como "python main.py < input.txt" com esse arquivo
+
+EX1
+
+x = 5
+y = x + 3
+z = y * 2
+
+EX2
+
+5
+x = 6
+y = x * 2
+(x + 2 * y) * ( x * y)
+
+EX3
+
+x = 50
+y = 20
+(x * 2) / (y / 2)
