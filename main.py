@@ -16,6 +16,7 @@ class ArithmeticVisitor:
         elif isinstance(ctx, ArithmeticParser.FactorContext):
             return self.visitFactor(ctx)
         
+        # criação de novas checagens de instâncias para fazer os visits corretamente
         elif isinstance(ctx, ArithmeticParser.ProgramContext):
             return self.visitProgram(ctx)
         
@@ -56,16 +57,17 @@ class ArithmeticVisitor:
     
         if ctx.INT():
             return int(ctx.INT().getText())
-        elif ctx.VAR():
+        elif ctx.VAR(): # instrução extra para caso factor acesse uma VAR
             key = ctx.VAR().getText()
             number = self.variablesDict[key]
             return int(number)
         else:
             return self.visit(ctx.expr())
     
-    # criar visits
+    # criar visita faltantes
     
     ## visitProgram
+    ## Para a criação deste visit usei como exemplo o visitExpr()
     def visitProgram(self, ctx):
         result = self.visit(ctx.statement(0))
         
@@ -106,7 +108,7 @@ def main():
         lexer = ArithmeticLexer(InputStream(expression))
         stream = CommonTokenStream(lexer)
         parser = ArithmeticParser(stream)
-        tree = parser.program()
+        tree = parser.program() # alteração feita para iniciar com programa ao invés de expr
         visitor = ArithmeticVisitor()
         result = visitor.visit(tree)
         print("Resultado:", result)
